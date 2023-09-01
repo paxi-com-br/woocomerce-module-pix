@@ -1,4 +1,5 @@
 /.code
 /.idea
 /vendor
+.env
 composer.lock

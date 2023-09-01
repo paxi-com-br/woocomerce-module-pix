@@ -6,6 +6,31 @@ if (!defined("ABSPATH")) {
 
 class WC_PAXI_PIX_Gateway extends WC_Payment_Gateway
 {
+    /**
+     * @var WC_PAXI_PIX_SDK
+     */
+    private $paxi_pix_sdk;
+
+    /**
+     * @var string
+     */
+    public $pix_key;
+
+    /**
+     * @var string
+     */
+    public $api_key;
+
+    /**
+     * @var string
+     */
+    public $api_secret;
+
+    /**
+     * @var string
+     */
+    public $webhook_secret;
+
     public function __construct()
     {
         $this->paxi_pix_sdk = new WC_PAXI_PIX_SDK;
@@ -163,7 +188,7 @@ class WC_PAXI_PIX_Gateway extends WC_Payment_Gateway
 
         global $woocommerce;
         $order->update_status("pending");
-        $order->reduce_order_stock();
+        wc_reduce_stock_levels($order_id);
         $woocommerce->cart->empty_cart();
 
         return array(
@@ -177,7 +202,7 @@ class WC_PAXI_PIX_Gateway extends WC_Payment_Gateway
         $order = wc_get_order($order_id);
 
         if (
-            $order->payment_method != $this->id
+            $order->get_payment_method() != $this->id
             || $order->is_paid()
             || $order->get_status() === "processing"
         ) {

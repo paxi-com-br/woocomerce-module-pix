@@ -13,7 +13,7 @@ class WC_PAXI_PIX_SDK
         $apiKey = $paxi_woocommerce->api_key;
         $apiSecret = $paxi_woocommerce->api_secret;
         $depositKey = $paxi_woocommerce->pix_key;
-        $depositAmount = $order->total;
+        $depositAmount = $order->get_total();
 
         try {
             $paxi = new PAXI_API_SDK($apiKey, $apiSecret);
@@ -46,7 +46,7 @@ class WC_PAXI_PIX_SDK
 
     public function event_pixin($order, $payload)
     {
-        if ($order->total == $payload["transactions"][0]["details"]["amount"]) {
+        if ($order->get_total() == $payload["transactions"][0]["details"]["amount"]) {
             $order->update_meta_data("paxi_pix_transaction_id", $payload["transactions"][0]["id"]);
             $order->update_status("processing");
             $order->save();

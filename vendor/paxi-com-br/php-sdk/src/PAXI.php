@@ -55,7 +55,7 @@ class PAXI
      */
     public function oauthToken()
     {
-        $res = $this->client->request("/api/v1/oauth/token", "POST", [
+        $res = $this->client->request("/oauth/token", "POST", [
             "grant_type" => "client_credentials",
             "api_key" => $this->apiKey,
             "api_secret" => $this->apiSecret
@@ -77,7 +77,7 @@ class PAXI
      */
     public function refreshToken()
     {
-        $res = $this->client->request("/api/v1/oauth/token", "POST", [
+        $res = $this->client->request("/oauth/token", "POST", [
             "grant_type" => "refresh_token",
             "refresh_token" => $this->refreshToken
         ]);
@@ -110,13 +110,12 @@ class PAXI
 
         $input = file_get_contents('php://input');
         $payload = json_decode($input, true);
-        $raw = json_encode($payload);
+        $raw = json_encode($payload); // fix: payload in raw
 
         if (!HMACSupport::verifyHash($receivedHmac, $raw, $webhookSecret)) {
             http_response_code(401); // 401 - Unauthorized
             exit;
         }
-
 
         return $payload;
     }

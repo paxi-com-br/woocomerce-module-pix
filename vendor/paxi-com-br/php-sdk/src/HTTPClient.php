@@ -5,7 +5,7 @@ namespace PAXI\SDK;
 class HTTPClient
 {
     /** @var string */
-    private $baseUrl = "https://paxi.com.br/";
+    private $baseUrl = "https://paxi.com.br/api/v1";
 
     /** @var string */
     private $accessToken;
